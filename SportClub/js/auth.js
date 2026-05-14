@@ -2,32 +2,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
 
     if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const emailError = document.getElementById('emailError');
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
             const loginMessage = document.getElementById('loginMessage');
 
-            // Validación básica
-            if (!email.includes('@inacapmail.cl')) {
-                emailError.textContent = "Usa tu correo institucional.";
-                return;
+            try {
+                localStorage.clear();
+                const response = await fetch('http://localhost:3000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    const user = result.data.user;
+                    // Guardamos todo el objeto para tener acceso a 'metadata'
+                    localStorage.setItem('token', result.data.token);
+                    localStorage.setItem('userRole', user.role);
+                    localStorage.setItem('userData', JSON.stringify(user));
+
+                    // Redirección por Rol y Color
+                    if (user.role === 'admin') {
+                        window.location.replace('dashboard-admin.html');
+                    } else if (user.role === 'coach') {
+                        window.location.replace('dashboard-coach.html');
+                    } else {
+                        window.location.replace('dashboard-usuario.html');
+                    }
+                } else {
+                    loginMessage.textContent = result.message || "Error de acceso";
+                    loginMessage.className = "alert alert-danger p-2 small";
+                    loginMessage.classList.remove('d-none');
+                }
+            } catch (error) {
+                alert("Error de conexión con el servidor.");
             }
-
-            // Simulador de roles
-            let role = 'user';
-            if (email === 'admin@inacapmail.cl') role = 'admin';
-            else if (email === 'coach@inacapmail.cl') role = 'coach';
-
-            localStorage.setItem('token', 'token_validado');
-            localStorage.setItem('userRole', role);
-
-            // Como ya estamos en la carpeta 'vistas', solo llamamos al archivo
-            if (role === 'admin') window.location.href = 'dashboard-admin.html';
-            else if (role === 'coach') window.location.href = 'dashboard-coach.html';
-            else window.location.href = 'dashboard-usuario.html';
         });
     }
 });
