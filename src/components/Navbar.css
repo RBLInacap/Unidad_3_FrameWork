@@ -1,0 +1,46 @@
+.navbar-custom {
+  flex-direction: column;
+  width: 250px;
+  background-color: #f8f9fa;
+  padding: 1rem 0;
+  border-right: 1px solid #dee2e6;
+}
+
+.nav-item {
+  color: #666;
+  padding: 0.75rem 1.5rem !important;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.nav-item:hover {
+  background-color: #f0f0f0;
+  border-left-color: #0066cc;
+}
+
+.nav-icon {
+  font-size: 1.25rem;
+}
+
+.nav-label {
+  font-weight: 500;
+}
+
+/* Estilos por rol */
+.navbar-usuario .nav-item:hover {
+  border-left-color: #0066cc;
+  color: #0066cc;
+}
+
+.navbar-coach .nav-item:hover {
+  border-left-color: #28a745;
+  color: #28a745;
+}
+
+.navbar-admin .nav-item:hover {
+  border-left-color: #dc3545;
+  color: #dc3545;
+}

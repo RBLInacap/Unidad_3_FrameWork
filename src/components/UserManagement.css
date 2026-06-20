@@ -1,0 +1,49 @@
+.user-management {
+  padding: 2rem 0;
+}
+
+.management-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.management-header h2 {
+  margin: 0;
+  color: #333;
+  font-weight: 600;
+}
+
+.users-table {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 1rem;
+}
+
+.users-table thead {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.badge-role {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.role-usuario {
+  background-color: #cce5ff;
+  color: #0066cc;
+}
+
+.role-coach {
+  background-color: #d4edda;
+  color: #28a745;
+}
+
+.role-admin {
+  background-color: #f8d7da;
+  color: #dc3545;
+}

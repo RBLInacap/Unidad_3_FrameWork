@@ -1,0 +1,169 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+.home-navbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-brand {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+.navbar-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.navbar-buttons button {
+  font-weight: 600;
+}
+
+.home-hero {
+  flex: 1;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.min-vh-75 {
+  min-height: 75vh;
+}
+
+.hero-text h2 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.hero-text p {
+  font-size: 1.25rem;
+  opacity: 0.95;
+  margin-bottom: 2rem;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary-hero {
+  background-color: #fff;
+  color: #667eea;
+  border: none;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+}
+
+.btn-primary-hero:hover {
+  background-color: #f0f0f0;
+}
+
+.hero-image {
+  text-align: center;
+}
+
+.hero-icon {
+  font-size: 8rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.home-features {
+  padding: 4rem 0;
+  background: white;
+  border-top: 1px solid #e9ecef;
+}
+
+.home-features h3 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 3rem;
+  color: #333;
+}
+
+.feature {
+  text-align: center;
+  padding: 2rem;
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.feature h5 {
+  font-weight: 600;
+  margin: 1rem 0 0.5rem 0;
+  color: #333;
+}
+
+.feature p {
+  color: #666;
+}
+
+.home-footer {
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 2rem 0;
+  margin-top: auto;
+}
+
+.home-footer p {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .hero-text h2 {
+    font-size: 2rem;
+  }
+
+  .hero-text p {
+    font-size: 1rem;
+  }
+
+  .hero-icon {
+    font-size: 4rem;
+  }
+
+  .navbar-brand {
+    font-size: 1.25rem;
+  }
+
+  .navbar-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .navbar-buttons button {
+    width: 100px;
+  }
+}

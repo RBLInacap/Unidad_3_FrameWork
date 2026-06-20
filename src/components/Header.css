@@ -1,0 +1,22 @@
+.dashboard-header {
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-header .navbar-brand {
+  font-size: 1.5rem;
+}
+
+.logo-icon {
+  margin-right: 8px;
+}
+
+.user-name {
+  color: white;
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+}

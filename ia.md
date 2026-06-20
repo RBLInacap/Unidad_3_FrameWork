@@ -1,6 +1,6 @@
 # Documentación de Uso de IA - Proyecto SportClub
 
-**Nombre del Estudiante:** [INGRESA TU NOMBRE AQUÍ]
+**Nombre del Estudiante:* Rodrigo Brizuela Luza
 **Carrera:** Analista Programador
 **Sede:** INACAP La Serena
 
