@@ -1,29 +1,86 @@
 import { useNavigate } from 'react-router-dom'
 import { Container, Button, Row, Col } from 'react-bootstrap'
+import { useAuth } from '../contexts/AuthContext'
+import Swal from 'sweetalert2'
 import './Home.css'
+import logoSportClub from '../../assets/logoSportClub.png'
 
 const Home = () => {
   const navigate = useNavigate()
+  const { user, isAuthenticated, logout } = useAuth()
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: '¿Cerrar sesión?',
+      text: '¿Deseas cerrar tu sesión?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cerrar sesión',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout()
+        Swal.fire({
+          icon: 'success',
+          title: 'Sesión cerrada',
+          text: 'Has cerrado sesión correctamente',
+          timer: 1500,
+          showConfirmButton: false
+        })
+      }
+    })
+  }
+
+  const getRolPath = () => {
+    if (user?.role === 'admin') return '/dashboard/admin'
+    if (user?.role === 'coach') return '/dashboard/coach'
+    return '/dashboard/user'
+  }
 
   return (
     <div className="home-container">
       <nav className="home-navbar">
         <Container>
           <div className="navbar-content">
-            <h1 className="navbar-brand">⚽ SportClub</h1>
+            <div className="navbar-brand navbar-brand-clickable" onClick={() => navigate('/')}>
+              <img src={logoSportClub} alt="SportClub" className="navbar-logo" />
+            </div>
             <div className="navbar-buttons">
-              <Button
-                variant="outline-light"
-                onClick={() => navigate('/login')}
-              >
-                Iniciar Sesión
-              </Button>
-              <Button
-                variant="light"
-                onClick={() => navigate('/register')}
-              >
-                Registrarse
-              </Button>
+              {isAuthenticated ? (
+                <>
+                  <span className="navbar-welcome">
+                    👤 Bienvenido, {user?.full_name || user?.firstName || 'Usuario'}
+                  </span>
+                  <Button
+                    variant="outline-light"
+                    className="me-2"
+                    onClick={() => navigate(getRolPath())}
+                  >
+                    Mi Dashboard
+                  </Button>
+                  <Button
+                    variant="light"
+                    onClick={handleLogout}
+                  >
+                    🚪 Cerrar Sesión
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="outline-light"
+                    onClick={() => navigate('/login')}
+                  >
+                    Iniciar Sesión
+                  </Button>
+                  <Button
+                    variant="light"
+                    onClick={() => navigate('/register')}
+                  >
+                    Registrarse
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </Container>
@@ -33,23 +90,54 @@ const Home = () => {
         <Container>
           <Row className="align-items-center min-vh-75">
             <Col lg={6} className="hero-text">
-              <h2>Bienvenido a SportClub</h2>
-              <p>Tu plataforma completa para gestionar tu comunidad deportiva</p>
+              <h2>
+                {isAuthenticated 
+                  ? `¡Bienvenido, ${user?.full_name?.split(' ')[0] || user?.firstName || 'Usuario'}!` 
+                  : 'Bienvenido a SportClub'
+                }
+              </h2>
+              <p>
+                {isAuthenticated
+                  ? 'Accede a tu panel para continuar'
+                  : 'Tu plataforma completa para gestionar tu comunidad deportiva'
+                }
+              </p>
               <div className="hero-buttons">
-                <Button
-                  size="lg"
-                  onClick={() => navigate('/register')}
-                  className="btn-primary-hero"
-                >
-                  Crear Cuenta
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline-light"
-                  onClick={() => navigate('/login')}
-                >
-                  Inicia Sesión
-                </Button>
+                {isAuthenticated ? (
+                  <>
+                    <Button
+                      size="lg"
+                      onClick={() => navigate(getRolPath())}
+                      className="btn-primary-hero"
+                    >
+                      Ir a Mi Dashboard
+                    </Button>
+                    <Button
+                      size="lg"
+                      variant="outline-light"
+                      onClick={handleLogout}
+                    >
+                      🚪 Cerrar Sesión
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      size="lg"
+                      onClick={() => navigate('/register')}
+                      className="btn-primary-hero"
+                    >
+                      Crear Cuenta
+                    </Button>
+                    <Button
+                      size="lg"
+                      variant="outline-light"
+                      onClick={() => navigate('/login')}
+                    >
+                      Inicia Sesión
+                    </Button>
+                  </>
+                )}
               </div>
             </Col>
             <Col lg={6} className="hero-image">

@@ -4,6 +4,7 @@ import { Container, Form, Button, Card } from 'react-bootstrap'
 import { validateRegisterForm, getPasswordErrors } from '../utils/validators'
 import apiClient from '../services/apiClient'
 import Swal from 'sweetalert2'
+import logoSportClub from '../../assets/logoSportClub.png'
 import './Auth.css'
 
 const Register = () => {
@@ -63,12 +64,13 @@ const Register = () => {
     setErrors({})
 
     try {
-      await apiClient.post('/auth/register', {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+      const fullName = `${formData.firstName} ${formData.lastName}`.trim()
+      
+      const response = await apiClient.post('/auth/register', {
+        full_name: fullName,
         email: formData.email,
         password: formData.password,
-        role: 'usuario' // Asignar automáticamente como usuario
+        role: 'user' // Asignar automáticamente como usuario
       })
 
       Swal.fire({
@@ -81,12 +83,54 @@ const Register = () => {
 
       navigate('/login')
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Error al registrarse'
-      setErrors({ submit: errorMessage })
+      console.error('Error de registro:', error)
+      
+      let errorMessage = 'Error al registrarse'
+      let errorTitle = 'Error en el registro'
+      const backendErrors = error.response?.data?.errors || {}
+      
+      // Manejar diferentes tipos de errores
+      if (error.response) {
+        const status = error.response.status
+        const data = error.response.data
+        
+        switch (status) {
+          case 400:
+            errorTitle = 'Validación fallida'
+            errorMessage = data?.message || 'Verifica los datos ingresados'
+            if (backendErrors.email) {
+              errorMessage = backendErrors.email
+            }
+            break
+          case 409:
+            errorTitle = 'Correo ya registrado'
+            errorMessage = data?.message || 'Ya existe una cuenta con este email'
+            break
+          case 422:
+            errorTitle = 'Datos inválidos'
+            errorMessage = Object.values(backendErrors).join(', ') || data?.message || 'Verifica los datos'
+            break
+          case 500:
+            errorTitle = 'Error del servidor'
+            errorMessage = 'El servidor está experimentando problemas. Intenta más tarde'
+            break
+          default:
+            errorMessage = data?.message || 'Error inesperado'
+        }
+      } else if (error.request) {
+        errorTitle = 'Error de conexión'
+        errorMessage = 'No se puede conectar al servidor. Verifica tu conexión a internet'
+      } else {
+        errorMessage = error.message || 'Error desconocido'
+      }
+      
+      setErrors(backendErrors)
+      
       Swal.fire({
         icon: 'error',
-        title: 'Error',
-        text: errorMessage
+        title: errorTitle,
+        text: errorMessage,
+        confirmButtonText: 'Entendido'
       })
     } finally {
       setLoading(false)
@@ -98,7 +142,9 @@ const Register = () => {
       <Container className="auth-form-container">
         <Card className="auth-card">
           <Card.Body>
-            <h1 className="text-center mb-4">SportClub</h1>
+            <div className="auth-logo-container" onClick={() => navigate('/')}>
+              <img src={logoSportClub} alt="SportClub" className="auth-logo" />
+            </div>
             <h2 className="text-center mb-4">Registrarse</h2>
 
             <Form onSubmit={handleRegister}>
@@ -186,7 +232,7 @@ const Register = () => {
 
               <Button
                 variant="primary"
-                className="w-100 mb-3"
+                className="w-100 mb-3 auth-submit-btn"
                 type="submit"
                 disabled={loading || passwordErrors.length > 0}
               >

@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: #faf8fa;
 }
 
 .profile-container {
@@ -16,7 +16,7 @@
 }
 
 .profile-header h1 {
-  color: #333;
+  color: #2E1A47;
   font-weight: 600;
   margin: 0;
 }
@@ -24,8 +24,15 @@
 .profile-card {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: none;
-  max-width: 600px;
-  margin: 0 auto;
+}
+
+.profile-card .card-header {
+  border-bottom: 2px solid #e9ecef;
+}
+
+.profile-card .card-title {
+  color: #2E1A47;
+  font-weight: 600;
 }
 
 .profile-avatar {
@@ -34,20 +41,82 @@
 }
 
 .avatar-circle {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #2E1A47 0%, #1a0f2e 100%);
+  color: #F2B705;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
   margin: 0 auto;
+  box-shadow: 0 4px 12px rgba(46, 26, 71, 0.3);
 }
 
 .profile-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.profile-actions button {
+  flex: 1;
+  min-width: 120px;
+}
+
+/* Estilos para los formularios */
+.profile-form-section {
+  margin-bottom: 2rem;
+}
+
+.profile-form-section .form-label {
+  font-weight: 500;
+  color: #2E1A47;
+  margin-bottom: 0.5rem;
+}
+
+.profile-form-section .form-control:disabled {
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+}
+
+.profile-form-section .form-text {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+/* Alertas */
+.alert-success {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .avatar-circle {
+    width: 80px;
+    height: 80px;
+    font-size: 1.5rem;
+  }
+
+  .profile-actions {
+    flex-direction: column;
+  }
+
+  .profile-actions button {
+    width: 100%;
+  }
+}
   display: flex;
   gap: 1rem;
   margin-top: 2rem;

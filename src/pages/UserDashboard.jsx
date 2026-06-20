@@ -1,12 +1,16 @@
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import Navbar from '../components/Navbar'
 import './Dashboard.css'
+import logoSportClub from '../../assets/logoSportClub.png'
 
 const UserDashboard = () => {
+  const navigate = useNavigate()
+
   return (
     <div className="dashboard-container user-dashboard">
-      <Header />
+      <Header role="usuario" />
       <div className="dashboard-content">
         <Navbar role="usuario" />
         <Container className="main-content">
@@ -24,7 +28,10 @@ const UserDashboard = () => {
                   <Card.Text>
                     Visualiza y gestiona todas tus reservas de clases.
                   </Card.Text>
-                  <Button variant="primary" className="btn-user">
+                  <Button 
+                    className="btn-user"
+                    onClick={() => navigate('/dashboard/user/reservas')}
+                  >
                     Ver Reservas
                   </Button>
                 </Card.Body>
@@ -39,7 +46,10 @@ const UserDashboard = () => {
                   <Card.Text>
                     Sigue tu progreso en las actividades deportivas.
                   </Card.Text>
-                  <Button variant="primary" className="btn-user">
+                  <Button 
+                    className="btn-user"
+                    onClick={() => navigate('/dashboard/user/progreso')}
+                  >
                     Ver Progreso
                   </Button>
                 </Card.Body>
@@ -54,7 +64,10 @@ const UserDashboard = () => {
                   <Card.Text>
                     Conecta con otros usuarios y comparte experiencias.
                   </Card.Text>
-                  <Button variant="primary" className="btn-user">
+                  <Button 
+                    className="btn-user"
+                    onClick={() => navigate('/dashboard/user/comunidad')}
+                  >
                     Ver Comunidad
                   </Button>
                 </Card.Body>
@@ -69,7 +82,7 @@ const UserDashboard = () => {
                   <Card.Text>
                     Visualiza tus estadísticas personales.
                   </Card.Text>
-                  <Button variant="primary" className="btn-user">
+                  <Button className="btn-user">
                     Ver Estadísticas
                   </Button>
                 </Card.Body>

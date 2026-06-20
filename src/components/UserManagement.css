@@ -11,7 +11,7 @@
 
 .management-header h2 {
   margin: 0;
-  color: #333;
+  color: #2E1A47;
   font-weight: 600;
 }
 
@@ -34,16 +34,16 @@
 }
 
 .role-usuario {
-  background-color: #cce5ff;
-  color: #0066cc;
+  background-color: #f0f0ff;
+  color: #2E1A47;
 }
 
 .role-coach {
-  background-color: #d4edda;
-  color: #28a745;
+  background-color: #faf8f5;
+  color: #3d2559;
 }
 
 .role-admin {
-  background-color: #f8d7da;
-  color: #dc3545;
+  background-color: #f2f0f4;
+  color: #1a0f2e;
 }

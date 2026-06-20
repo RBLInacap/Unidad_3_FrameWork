@@ -12,7 +12,6 @@
 .main-content {
   flex: 1;
   padding: 2rem;
-  background-color: #f8f9fa;
 }
 
 .dashboard-header-content {
@@ -66,13 +65,15 @@
   margin-bottom: 0.5rem;
 }
 
-/* Usuario - Azul */
+/* Usuario - Morado + Azul */
 .user-dashboard .dashboard-header {
-  background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+  background: linear-gradient(135deg, #2E1A47 0%, #1a0f2e 100%);
+  border-bottom: 3px solid #0066cc;
 }
 
 .user-dashboard .main-content {
-  background-color: #f0f5ff;
+  background-color: #faf8fa;
+  border-left: 5px solid #0066cc;
 }
 
 .user-dashboard .dashboard-card {
@@ -80,14 +81,17 @@
 }
 
 .user-dashboard .btn-user {
-  background-color: #0066cc;
-  border: none;
+  background-color: #2E1A47;
+  border: 2px solid #0066cc;
   font-weight: 600;
+  color: white;
+  transition: all 0.3s ease;
 }
 
 .user-dashboard .btn-user:hover {
-  background-color: #004d99;
-  color: white;
+  background-color: #0066cc;
+  color: #F2B705;
+  border-color: #F2B705;
 }
 
 .user-dashboard .stat-card {
@@ -98,13 +102,15 @@
   color: #0066cc;
 }
 
-/* Coach - Verde */
+/* Coach - Morado + Verde */
 .coach-dashboard .dashboard-header {
-  background: linear-gradient(135deg, #28a745 0%, #1f7e34 100%);
+  background: linear-gradient(135deg, #3d2559 0%, #2E1A47 100%);
+  border-bottom: 3px solid #28a745;
 }
 
 .coach-dashboard .main-content {
-  background-color: #f0fff4;
+  background-color: #faf8fa;
+  border-left: 5px solid #28a745;
 }
 
 .coach-dashboard .dashboard-card {
@@ -112,14 +118,17 @@
 }
 
 .coach-dashboard .btn-coach {
-  background-color: #28a745;
-  border: none;
+  background-color: #2E1A47;
+  border: 2px solid #28a745;
   font-weight: 600;
+  color: white;
+  transition: all 0.3s ease;
 }
 
 .coach-dashboard .btn-coach:hover {
-  background-color: #1f7e34;
-  color: white;
+  background-color: #28a745;
+  color: #F2B705;
+  border-color: #F2B705;
 }
 
 .coach-dashboard .stat-card {
@@ -130,13 +139,15 @@
   color: #28a745;
 }
 
-/* Admin - Rojo/Morado */
+/* Admin - Morado + Rojo */
 .admin-dashboard .dashboard-header {
-  background: linear-gradient(135deg, #dc3545 0%, #8B2E6B 100%);
+  background: linear-gradient(135deg, #1a0f2e 0%, #0d050f 100%);
+  border-bottom: 3px solid #dc3545;
 }
 
 .admin-dashboard .main-content {
-  background-color: #fff5f5;
+  background-color: #faf8fa;
+  border-left: 5px solid #dc3545;
 }
 
 .admin-dashboard .dashboard-card {
@@ -144,14 +155,17 @@
 }
 
 .admin-dashboard .btn-admin {
-  background-color: #dc3545;
-  border: none;
+  background-color: #2E1A47;
+  border: 2px solid #dc3545;
   font-weight: 600;
+  color: white;
+  transition: all 0.3s ease;
 }
 
 .admin-dashboard .btn-admin:hover {
-  background-color: #c82333;
-  color: white;
+  background-color: #dc3545;
+  color: #F2B705;
+  border-color: #F2B705;
 }
 
 .admin-dashboard .stat-card {

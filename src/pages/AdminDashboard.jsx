@@ -1,13 +1,17 @@
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import Navbar from '../components/Navbar'
 import UserManagement from '../components/UserManagement'
 import './Dashboard.css'
+import logoSportClub from '../../assets/logoSportClub.png'
 
 const AdminDashboard = () => {
+  const navigate = useNavigate()
+
   return (
     <div className="dashboard-container admin-dashboard">
-      <Header />
+      <Header role="admin" />
       <div className="dashboard-content">
         <Navbar role="admin" />
         <Container className="main-content">
@@ -61,13 +65,16 @@ const AdminDashboard = () => {
             <Col md={4} className="mb-4">
               <Card className="dashboard-card">
                 <Card.Body>
-                  <div className="card-icon">⚙️</div>
-                  <Card.Title>Configuración</Card.Title>
+                  <div className="card-icon">👥</div>
+                  <Card.Title>Usuarios</Card.Title>
                   <Card.Text>
-                    Ajusta los parámetros del sistema.
+                    Administra todos los usuarios del sistema.
                   </Card.Text>
-                  <Button variant="danger" className="btn-admin">
-                    Configurar
+                  <Button 
+                    className="btn-admin"
+                    onClick={() => navigate('/dashboard/admin/usuarios')}
+                  >
+                    Gestionar Usuarios
                   </Button>
                 </Card.Body>
               </Card>
@@ -81,7 +88,10 @@ const AdminDashboard = () => {
                   <Card.Text>
                     Visualiza reportes del sistema.
                   </Card.Text>
-                  <Button variant="danger" className="btn-admin">
+                  <Button 
+                    className="btn-admin"
+                    onClick={() => navigate('/dashboard/admin/reportes')}
+                  >
                     Ver Reportes
                   </Button>
                 </Card.Body>
@@ -91,22 +101,21 @@ const AdminDashboard = () => {
             <Col md={4} className="mb-4">
               <Card className="dashboard-card">
                 <Card.Body>
-                  <div className="card-icon">🔐</div>
-                  <Card.Title>Seguridad</Card.Title>
+                  <div className="card-icon">⚙️</div>
+                  <Card.Title>Configuración</Card.Title>
                   <Card.Text>
-                    Gestiona la seguridad del sistema.
+                    Ajusta los parámetros del sistema.
                   </Card.Text>
-                  <Button variant="danger" className="btn-admin">
-                    Ir a Seguridad
+                  <Button 
+                    className="btn-admin"
+                    onClick={() => navigate('/dashboard/admin/configuracion')}
+                  >
+                    Ir a Configuración
                   </Button>
                 </Card.Body>
               </Card>
             </Col>
           </Row>
-
-          <hr className="my-5" />
-
-          <UserManagement />
         </Container>
       </div>
     </div>

@@ -1,12 +1,16 @@
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import Navbar from '../components/Navbar'
 import './Dashboard.css'
+import logoSportClub from '../../assets/logoSportClub.png'
 
 const CoachDashboard = () => {
+  const navigate = useNavigate()
+
   return (
     <div className="dashboard-container coach-dashboard">
-      <Header />
+      <Header role="coach" />
       <div className="dashboard-content">
         <Navbar role="coach" />
         <Container className="main-content">
@@ -24,7 +28,10 @@ const CoachDashboard = () => {
                   <Card.Text>
                     Visualiza y gestiona la lista de tus alumnos.
                   </Card.Text>
-                  <Button variant="success" className="btn-coach">
+                  <Button 
+                    className="btn-coach"
+                    onClick={() => navigate('/dashboard/coach/alumnos')}
+                  >
                     Ver Alumnos
                   </Button>
                 </Card.Body>
@@ -39,7 +46,10 @@ const CoachDashboard = () => {
                   <Card.Text>
                     Organiza y programa tus clases.
                   </Card.Text>
-                  <Button variant="success" className="btn-coach">
+                  <Button 
+                    className="btn-coach"
+                    onClick={() => navigate('/dashboard/coach/clases')}
+                  >
                     Ver Clases
                   </Button>
                 </Card.Body>
@@ -54,7 +64,10 @@ const CoachDashboard = () => {
                   <Card.Text>
                     Visualiza reportes de asistencia y desempeño.
                   </Card.Text>
-                  <Button variant="success" className="btn-coach">
+                  <Button 
+                    className="btn-coach"
+                    onClick={() => navigate('/dashboard/coach/reportes')}
+                  >
                     Ver Reportes
                   </Button>
                 </Card.Body>
@@ -69,7 +82,7 @@ const CoachDashboard = () => {
                   <Card.Text>
                     Comunícate con tus alumnos.
                   </Card.Text>
-                  <Button variant="success" className="btn-coach">
+                  <Button className="btn-coach">
                     Ver Mensajes
                   </Button>
                 </Card.Body>

@@ -3,20 +3,62 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.dashboard-header .navbar-brand {
-  font-size: 1.5rem;
+.header-brand-clickable {
+  cursor: pointer;
+  transition: opacity 0.3s ease;
 }
 
-.logo-icon {
-  margin-right: 8px;
+.header-brand-clickable:hover {
+  opacity: 0.8;
+}
+
+.header-logo {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
+.dashboard-header .navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .user-name {
   color: white;
   font-weight: 500;
+  font-size: 1.1rem;
+  margin-right: 2rem;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
+}
+
+.header-actions button {
+  transition: all 0.3s ease;
+}
+
+.header-actions button:hover {
+  background-color: #F2B705 !important;
+  color: #2E1A47 !important;
+  border-color: #F2B705 !important;
+}
+
+/* Usuario - Morado + Azul */
+.header-usuario {
+  background: linear-gradient(135deg, #2E1A47 0%, #1a0f2e 100%);
+  border-bottom: 3px solid #0066cc;
+}
+
+/* Coach - Morado + Verde */
+.header-coach {
+  background: linear-gradient(135deg, #3d2559 0%, #2E1A47 100%);
+  border-bottom: 3px solid #28a745;
+}
+
+/* Admin - Morado + Rojo */
+.header-admin {
+  background: linear-gradient(135deg, #1a0f2e 0%, #0d050f 100%);
+  border-bottom: 3px solid #dc3545;
 }

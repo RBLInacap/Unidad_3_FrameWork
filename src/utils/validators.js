@@ -45,6 +45,36 @@ export const validateLoginForm = (email, password) => {
   return errors
 }
 
+export const validateChangePasswordForm = (currentPassword, newPassword, confirmPassword) => {
+  const errors = {}
+  
+  if (!currentPassword) {
+    errors.current_password = 'La contraseña actual es requerida'
+  }
+  
+  if (!newPassword) {
+    errors.new_password = 'La nueva contraseña es requerida'
+  } else if (newPassword.length < 8) {
+    errors.new_password = 'La contraseña debe tener mínimo 8 caracteres'
+  } else if (!/[A-Z]/.test(newPassword)) {
+    errors.new_password = 'Debe contener al menos una mayúscula'
+  } else if (!/\d/.test(newPassword)) {
+    errors.new_password = 'Debe contener al menos un número'
+  }
+  
+  if (!confirmPassword) {
+    errors.confirm_password = 'Debe confirmar la contraseña'
+  } else if (newPassword !== confirmPassword) {
+    errors.confirm_password = 'Las contraseñas no coinciden'
+  }
+  
+  if (currentPassword && newPassword && currentPassword === newPassword) {
+    errors.new_password = 'La nueva contraseña debe ser diferente a la actual'
+  }
+  
+  return errors
+}
+
 export const validateRegisterForm = (firstName, lastName, email, password, confirmPassword) => {
   const errors = {}
   

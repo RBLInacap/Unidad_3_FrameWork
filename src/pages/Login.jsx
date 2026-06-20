@@ -4,6 +4,7 @@ import { Container, Form, Button, Card } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext'
 import { validateLoginForm } from '../utils/validators'
 import Swal from 'sweetalert2'
+import logoSportClub from '../../assets/logoSportClub.png'
 import './Auth.css'
 
 const Login = () => {
@@ -35,6 +36,10 @@ const Login = () => {
     try {
       const response = await login(email, password)
       
+      if (!response || !response.user) {
+        throw new Error('Respuesta inválida del servidor')
+      }
+
       Swal.fire({
         icon: 'success',
         title: '¡Bienvenido!',
@@ -50,15 +55,52 @@ const Login = () => {
       } else if (role === 'coach') {
         navigate('/dashboard/coach')
       } else {
-        navigate('/dashboard/usuario')
+        navigate('/dashboard/user')
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Error al iniciar sesión'
+      console.error('Error de login:', error)
+      
+      let errorMessage = 'Error al iniciar sesión'
+      let errorTitle = 'Error de autenticación'
+
+      // Manejar diferentes tipos de errores
+      if (error.response) {
+        const status = error.response.status
+        const data = error.response.data
+        
+        switch (status) {
+          case 400:
+            errorTitle = 'Validación fallida'
+            errorMessage = data?.message || data?.errors?.email || 'Datos inválidos'
+            break
+          case 401:
+            errorTitle = 'Credenciales inválidas'
+            errorMessage = data?.message || 'El email o la contraseña son incorrectos'
+            break
+          case 404:
+            errorTitle = 'Usuario no encontrado'
+            errorMessage = 'No existe una cuenta con este email'
+            break
+          case 500:
+            errorTitle = 'Error del servidor'
+            errorMessage = 'El servidor está experimentando problemas. Intenta más tarde'
+            break
+          default:
+            errorMessage = data?.message || 'Error inesperado'
+        }
+      } else if (error.request) {
+        errorTitle = 'Error de conexión'
+        errorMessage = 'No se puede conectar al servidor. Verifica tu conexión a internet'
+      } else {
+        errorMessage = error.message || 'Error desconocido'
+      }
+
       setErrors({ submit: errorMessage })
       Swal.fire({
         icon: 'error',
-        title: 'Error',
-        text: errorMessage
+        title: errorTitle,
+        text: errorMessage,
+        confirmButtonText: 'Entendido'
       })
     } finally {
       setLoading(false)
@@ -69,7 +111,9 @@ const Login = () => {
       <Container className="auth-form-container">
         <Card className="auth-card">
           <Card.Body>
-            <h1 className="text-center mb-4">SportClub</h1>
+            <div className="auth-logo-container" onClick={() => navigate('/')}>
+              <img src={logoSportClub} alt="SportClub" className="auth-logo" />
+            </div>
             <h2 className="text-center mb-4">Iniciar Sesión</h2>
 
             <Form onSubmit={handleLogin}>
@@ -109,7 +153,7 @@ const Login = () => {
 
               <Button
                 variant="primary"
-                className="w-100 mb-3"
+                className="w-100 mb-3 auth-submit-btn"
                 type="submit"
                 disabled={loading}
               >

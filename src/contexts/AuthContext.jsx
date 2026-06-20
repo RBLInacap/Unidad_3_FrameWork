@@ -11,26 +11,52 @@ export const AuthProvider = ({ children }) => {
   // Recuperar usuario de localStorage al cargar
   useEffect(() => {
     const storedUser = authService.getCurrentUser()
-    if (storedUser && authService.isAuthenticated()) {
+    const isAuth = authService.isAuthenticated()
+    
+    if (storedUser && isAuth) {
       setUser(storedUser)
       setIsAuthenticated(true)
+      console.log('[AuthContext] Usuario restaurado de localStorage')
     }
     setLoading(false)
   }, [])
 
   const login = async (email, password) => {
-    const response = await authService.login(email, password)
-    setUser(response.user)
-    setIsAuthenticated(true)
-    return response
+    try {
+      console.log('[AuthContext] Iniciando login para:', email)
+      const response = await authService.login(email, password)
+      
+      if (!response || !response.user || !response.token) {
+        throw new Error('Respuesta de login inválida')
+      }
+      
+      setUser(response.user)
+      setIsAuthenticated(true)
+      console.log('[AuthContext] Login exitoso para:', response.user.email)
+      
+      return response
+    } catch (error) {
+      console.error('[AuthContext] Error de login:', error)
+      setUser(null)
+      setIsAuthenticated(false)
+      throw error
+    }
   }
 
   const register = async (userData) => {
-    const response = await authService.register(userData)
-    return response
+    try {
+      console.log('[AuthContext] Registrando usuario:', userData.email)
+      const response = await authService.register(userData)
+      console.log('[AuthContext] Registro exitoso')
+      return response
+    } catch (error) {
+      console.error('[AuthContext] Error de registro:', error)
+      throw error
+    }
   }
 
   const logout = () => {
+    console.log('[AuthContext] Logout de usuario')
     authService.logout()
     setUser(null)
     setIsAuthenticated(false)

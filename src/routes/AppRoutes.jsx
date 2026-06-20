@@ -9,6 +9,18 @@ import UserDashboard from '../pages/UserDashboard'
 import CoachDashboard from '../pages/CoachDashboard'
 import AdminDashboard from '../pages/AdminDashboard'
 import NotFound from '../pages/NotFound'
+// Importar páginas de usuario
+import Reservas from '../pages/user/Reservas'
+import Progreso from '../pages/user/Progreso'
+import Comunidad from '../pages/user/Comunidad'
+// Importar páginas de coach
+import Alumnos from '../pages/coach/Alumnos'
+import Clases from '../pages/coach/Clases'
+import Reportes from '../pages/coach/Reportes'
+// Importar páginas de admin
+import Usuarios from '../pages/admin/Usuarios'
+import ReportesAdmin from '../pages/admin/Reportes'
+import Configuracion from '../pages/admin/Configuracion'
 
 const AppRoutes = () => {
   const { loading } = useAuth()
@@ -42,10 +54,34 @@ const AppRoutes = () => {
 
       {/* Rutas protegidas - Usuario */}
       <Route
-        path="/dashboard/usuario"
+        path="/dashboard/user"
         element={
-          <ProtectedRoute allowedRoles={['usuario']}>
+          <ProtectedRoute allowedRoles={['user']}>
             <UserDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/user/reservas"
+        element={
+          <ProtectedRoute allowedRoles={['user']}>
+            <Reservas />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/user/progreso"
+        element={
+          <ProtectedRoute allowedRoles={['user']}>
+            <Progreso />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/user/comunidad"
+        element={
+          <ProtectedRoute allowedRoles={['user']}>
+            <Comunidad />
           </ProtectedRoute>
         }
       />
@@ -59,6 +95,30 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/dashboard/coach/alumnos"
+        element={
+          <ProtectedRoute allowedRoles={['coach']}>
+            <Alumnos />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/coach/clases"
+        element={
+          <ProtectedRoute allowedRoles={['coach']}>
+            <Clases />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/coach/reportes"
+        element={
+          <ProtectedRoute allowedRoles={['coach']}>
+            <Reportes />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Rutas protegidas - Admin */}
       <Route
@@ -66,6 +126,30 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={['admin']}>
             <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/admin/usuarios"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <Usuarios />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/admin/reportes"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <ReportesAdmin />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/admin/configuracion"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <Configuracion />
           </ProtectedRoute>
         }
       />

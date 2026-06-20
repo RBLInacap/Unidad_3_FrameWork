@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { Navbar as BootstrapNavbar, Container, Button } from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext'
 import Swal from 'sweetalert2'
+import logoSportClub from '../../assets/logoSportClub.png'
 import './Header.css'
 
 const Header = () => {
@@ -32,15 +33,15 @@ const Header = () => {
   }
 
   return (
-    <BootstrapNavbar className="dashboard-header" sticky="top">
+    <BootstrapNavbar className={`dashboard-header header-${user?.role}`} sticky="top">
       <Container>
-        <BootstrapNavbar.Brand className="fw-bold">
-          <span className="logo-icon">⚽</span> SportClub
+        <BootstrapNavbar.Brand className="fw-bold d-flex align-items-center header-brand-clickable" onClick={() => navigate('/')}>
+          <img src={logoSportClub} alt="SportClub" className="header-logo" />
         </BootstrapNavbar.Brand>
         <BootstrapNavbar.Collapse className="justify-content-end">
           <div className="header-actions">
-            <span className="user-name me-3">
-              Hola, {user?.firstName}
+            <span className="user-name">
+              👤 Bienvenido, {user?.full_name || user?.firstName || 'Usuario'}
             </span>
             <Button
               variant="outline-light"
@@ -55,7 +56,7 @@ const Header = () => {
               size="sm"
               onClick={handleLogout}
             >
-              Cerrar Sesión
+              🚪 Cerrar Sesión
             </Button>
           </div>
         </BootstrapNavbar.Collapse>
