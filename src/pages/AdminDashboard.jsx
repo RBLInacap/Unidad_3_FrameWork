@@ -138,6 +138,24 @@ const AdminDashboard = () => {
             <Col md={4} className="mb-4">
               <Card className="dashboard-card">
                 <Card.Body>
+                  <div className="card-icon">⚽</div>
+                  <Card.Title>Deportes</Card.Title>
+                  <Card.Text>
+                    Administra todos los deportes ofrecidos.
+                  </Card.Text>
+                  <Button 
+                    className="btn-admin"
+                    onClick={() => navigate('/dashboard/admin/deportes')}
+                  >
+                    Gestionar Deportes
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>
+
+            <Col md={4} className="mb-4">
+              <Card className="dashboard-card">
+                <Card.Body>
                   <div className="card-icon">📊</div>
                   <Card.Title>Reportes</Card.Title>
                   <Card.Text>

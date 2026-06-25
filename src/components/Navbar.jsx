@@ -24,6 +24,7 @@ const Navbar = ({ role }) => {
         { label: 'Inicio', icon: '🏠', path: '/dashboard/admin' },
         { label: 'Usuarios', icon: '👥', path: '/dashboard/admin/usuarios' },
         { label: 'Crear Usuario', icon: '➕', path: '/dashboard/admin/usuarios/crear' },
+        { label: 'Deportes', icon: '⚽', path: '/dashboard/admin/deportes' },
         { label: 'Reportes', icon: '📊', path: '/dashboard/admin/reportes' },
         { label: 'Configuración', icon: '⚙️', path: '/dashboard/admin/configuracion' }
       ]

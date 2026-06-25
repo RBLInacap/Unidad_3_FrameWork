@@ -22,6 +22,7 @@ import Usuarios from '../pages/admin/Usuarios'
 import CrearUsuario from '../pages/admin/CrearUsuario'
 import ReportesAdmin from '../pages/admin/Reportes'
 import Configuracion from '../pages/admin/Configuracion'
+import Deportes from '../pages/admin/Deportes'
 
 const AppRoutes = () => {
   const { loading } = useAuth()
@@ -159,6 +160,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={['admin']}>
             <Configuracion />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/admin/deportes"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <Deportes />
           </ProtectedRoute>
         }
       />
