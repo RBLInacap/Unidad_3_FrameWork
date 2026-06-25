@@ -37,8 +37,8 @@
 }
 
 .navbar-logo {
-  height: 120px;
-  width: 120px;
+  height: 75px;
+  width: 75px;
   object-fit: contain;
 }
 
@@ -67,12 +67,30 @@
 }
 
 .home-hero {
+  position: relative;
   flex: 1;
-  background: linear-gradient(135deg, #2E1A47 0%, #1a0f2e 100%);
+  background-color: #2E1A47;
   color: white;
   display: flex;
   align-items: center;
   padding: 2rem 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.home-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(46, 26, 71, 0.75);
+  z-index: 0;
+  pointer-events: none;
+}
+.home-hero > .container,
+.home-hero .hero-text,
+.home-hero .hero-image {
+  position: relative;
+  z-index: 1;
 }
 
 .min-vh-75 {

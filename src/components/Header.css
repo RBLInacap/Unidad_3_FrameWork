@@ -46,6 +46,7 @@
 }
 
 /* Usuario - Morado + Azul */
+.header-user,
 .header-usuario {
   background: linear-gradient(135deg, #2E1A47 0%, #1a0f2e 100%);
   border-bottom: 3px solid #0066cc;

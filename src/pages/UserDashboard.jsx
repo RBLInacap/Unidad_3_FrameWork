@@ -74,20 +74,6 @@ const UserDashboard = () => {
               </Card>
             </Col>
 
-            <Col md={6} className="mb-4">
-              <Card className="dashboard-card">
-                <Card.Body>
-                  <div className="card-icon">📊</div>
-                  <Card.Title>Estadísticas</Card.Title>
-                  <Card.Text>
-                    Visualiza tus estadísticas personales.
-                  </Card.Text>
-                  <Button className="btn-user">
-                    Ver Estadísticas
-                  </Button>
-                </Card.Body>
-              </Card>
-            </Col>
           </Row>
         </Container>
       </div>

@@ -1,8 +1,8 @@
 import apiClient from './apiClient'
 
 export const userService = {
-  getAll: async () => {
-    const response = await apiClient.get('/users')
+  getAll: async (filters = {}) => {
+    const response = await apiClient.get('/users', { params: filters })
     return response.data
   },
 

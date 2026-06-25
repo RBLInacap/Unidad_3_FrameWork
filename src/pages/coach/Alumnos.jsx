@@ -1,56 +1,97 @@
+import { useEffect, useState } from 'react'
 import { Container, Table, Button, Card, Row, Col, Badge } from 'react-bootstrap'
 import Header from '../../components/Header'
 import Navbar from '../../components/Navbar'
 import Swal from 'sweetalert2'
 import '../Dashboard.css'
+import userService from '../../services/userService'
+import { useAuth } from '../../contexts/AuthContext'
 
 const Alumnos = () => {
-  const alumnos = [
-    {
-      id: 1,
-      nombre: 'Juan García',
-      email: 'juan@example.com',
-      clases: 12,
-      asistencia: '92%',
-      estado: 'activo'
-    },
-    {
-      id: 2,
-      nombre: 'María López',
-      email: 'maria@example.com',
-      clases: 8,
-      asistencia: '75%',
-      estado: 'activo'
-    },
-    {
-      id: 3,
-      nombre: 'Carlos Rodríguez',
-      email: 'carlos@example.com',
-      clases: 5,
-      asistencia: '60%',
-      estado: 'inactivo'
-    }
-  ]
+  const { user: authUser } = useAuth()
+  const [coach, setCoach] = useState(null)
+  const [students, setStudents] = useState([])
+  const [assignedIds, setAssignedIds] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const handleContactar = (nombre) => {
-    Swal.fire({
-      title: `Contactar a ${nombre}`,
-      input: 'textarea',
-      inputLabel: 'Mensaje',
-      inputPlaceholder: 'Escribe tu mensaje...',
-      showCancelButton: true,
-      confirmButtonText: 'Enviar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire('Enviado', 'Mensaje enviado correctamente', 'success')
+  useEffect(() => {
+    const load = async () => {
+      try {
+        if (!authUser?.id) return
+
+        const [coachRes, studentsRes] = await Promise.all([
+          userService.getById(authUser.id),
+          userService.getAll({ role: 'user' })
+        ])
+
+        const freshCoach = coachRes.data || coachRes
+        const allStudents = (studentsRes.data || studentsRes) || []
+        const studentIds = Array.isArray(freshCoach.metadata?.students)
+          ? freshCoach.metadata.students.map((item) => (typeof item === 'object' ? item.id : item))
+          : []
+
+        setCoach(freshCoach)
+        setStudents(allStudents)
+        setAssignedIds(studentIds)
+      } catch (error) {
+        console.error('Error cargando alumnos:', error)
+      } finally {
+        setLoading(false)
       }
-    })
+    }
+
+    load()
+  }, [authUser])
+
+  const saveMetadata = async (metadata) => {
+    try {
+      const payload = { metadata }
+      const res = await userService.update(coach.id, payload)
+      const updatedCoach = res.data || res
+      localStorage.setItem('user', JSON.stringify(updatedCoach))
+      setCoach(updatedCoach)
+      return updatedCoach
+    } catch (error) {
+      console.error('Error guardando metadata del coach:', error)
+      Swal.fire('Error', 'No se pudo guardar la información del coach', 'error')
+      return null
+    }
   }
 
-  const getEstadoBadge = (estado) => {
-    return estado === 'activo' 
-      ? <Badge bg="success">Activo</Badge>
-      : <Badge bg="secondary">Inactivo</Badge>
+  const handleToggleAsignacion = async (studentId) => {
+    const newAssigned = assignedIds.includes(studentId)
+      ? assignedIds.filter((id) => id !== studentId)
+      : [...assignedIds, studentId]
+
+    const metadata = {
+      ...(coach.metadata || {}),
+      students: newAssigned
+    }
+
+    const updatedCoach = await saveMetadata(metadata)
+    if (updatedCoach) {
+      setAssignedIds(newAssigned)
+      Swal.fire('Éxito', `Alumno ${newAssigned.includes(studentId) ? 'asignado' : 'desasignado'} correctamente`, 'success')
+    }
+  }
+
+  const assignedStudents = students.filter((student) => assignedIds.includes(student.id))
+  const activeStudents = assignedStudents.length
+  const totalStudents = students.length
+  const attendance = totalStudents === 0 ? 0 : Math.round((activeStudents / totalStudents) * 100)
+
+  const getEstadoBadge = (isAssigned) => {
+    return isAssigned
+      ? <Badge bg="success">Asignado</Badge>
+      : <Badge bg="secondary">Disponible</Badge>
+  }
+
+  const handleContactar = (email) => {
+    if (!email) {
+      return Swal.fire('Error', 'No se encontró el email del alumno', 'error')
+    }
+
+    window.location.href = `mailto:${email}`
   }
 
   return (
@@ -68,7 +109,7 @@ const Alumnos = () => {
             <Col md={4} className="mb-3">
               <Card className="stat-card">
                 <Card.Body className="text-center">
-                  <div className="stat-number">24</div>
+                  <div className="stat-number">{totalStudents}</div>
                   <Card.Text>Alumnos Totales</Card.Text>
                 </Card.Body>
               </Card>
@@ -76,16 +117,16 @@ const Alumnos = () => {
             <Col md={4} className="mb-3">
               <Card className="stat-card">
                 <Card.Body className="text-center">
-                  <div className="stat-number">19</div>
-                  <Card.Text>Alumnos Activos</Card.Text>
+                  <div className="stat-number">{activeStudents}</div>
+                  <Card.Text>Alumnos Asignados</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
             <Col md={4} className="mb-3">
               <Card className="stat-card">
                 <Card.Body className="text-center">
-                  <div className="stat-number">87%</div>
-                  <Card.Text>Asistencia Promedio</Card.Text>
+                  <div className="stat-number">{attendance}%</div>
+                  <Card.Text>Participación estimada</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -103,42 +144,54 @@ const Alumnos = () => {
                   <tr>
                     <th>Nombre</th>
                     <th>Email</th>
-                    <th>Clases</th>
-                    <th>Asistencia</th>
+                    <th>Rol</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {alumnos.map((alumno) => (
-                    <tr key={alumno.id}>
-                      <td>{alumno.nombre}</td>
-                      <td>{alumno.email}</td>
-                      <td>{alumno.clases}</td>
-                      <td>{alumno.asistencia}</td>
-                      <td>{getEstadoBadge(alumno.estado)}</td>
-                      <td>
-                        <Button
-                          variant="info"
-                          size="sm"
-                          className="me-2"
-                          onClick={() => handleContactar(alumno.nombre)}
-                        >
-                          Contactar
-                        </Button>
-                      </td>
+                  {loading ? (
+                    <tr>
+                      <td colSpan="5">Cargando alumnos...</td>
                     </tr>
-                  ))}
+                  ) : students.length === 0 ? (
+                    <tr>
+                      <td colSpan="5">No hay alumnos registrados.</td>
+                    </tr>
+                  ) : (
+                    students.map((alumno) => {
+                      const isAssigned = assignedIds.includes(alumno.id)
+                      return (
+                        <tr key={alumno.id}>
+                          <td>{alumno.full_name}</td>
+                          <td>{alumno.email}</td>
+                          <td>{alumno.role}</td>
+                          <td>{getEstadoBadge(isAssigned)}</td>
+                          <td>
+                            <Button
+                              variant={isAssigned ? 'outline-danger' : 'success'}
+                              size="sm"
+                              className="me-2"
+                              onClick={() => handleToggleAsignacion(alumno.id)}
+                            >
+                              {isAssigned ? 'Desasignar' : 'Asignar'}
+                            </Button>
+                            <Button
+                              variant="info"
+                              size="sm"
+                              onClick={() => handleContactar(alumno.email)}
+                            >
+                              Contactar
+                            </Button>
+                          </td>
+                        </tr>
+                      )
+                    })
+                  )}
                 </tbody>
               </Table>
             </Card.Body>
           </Card>
-
-          <div className="mt-4">
-            <Button variant="success" size="lg">
-              + Agregar Nuevo Alumno
-            </Button>
-          </div>
         </Container>
       </div>
     </div>

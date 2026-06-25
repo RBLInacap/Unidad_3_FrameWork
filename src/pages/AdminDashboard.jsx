@@ -1,13 +1,60 @@
-import { Container, Row, Col, Card, Button } from 'react-bootstrap'
+import { useEffect, useState } from 'react'
+import { Container, Row, Col, Card, Button, Spinner } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import Navbar from '../components/Navbar'
-import UserManagement from '../components/UserManagement'
 import './Dashboard.css'
-import logoSportClub from '../../assets/logoSportClub.png'
+import userService from '../services/userService'
 
 const AdminDashboard = () => {
   const navigate = useNavigate()
+  const [stats, setStats] = useState({
+    activeUsers: 0,
+    coaches: 0,
+    activeClasses: 0,
+    todaysReservations: 0
+  })
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const response = await userService.getAll()
+        const allUsers = (response.data || response) || []
+
+        const activeUsers = allUsers.filter((user) => {
+          const status = String(user.status || user.estado || 'activo').toLowerCase()
+          return status !== 'inactive' && status !== 'inactivo'
+        }).length
+
+        const coaches = allUsers.filter((user) => user.role === 'coach').length
+
+        const allClasses = allUsers.flatMap((user) => {
+          const clases = Array.isArray(user.metadata?.clases) ? user.metadata.clases : []
+          return clases.filter((clase) => clase.estado !== 'inactiva')
+        })
+
+        const today = new Date().toISOString().slice(0, 10)
+        const todaysReservations = allUsers.flatMap((user) => {
+          const reservas = Array.isArray(user.metadata?.reservas) ? user.metadata.reservas : []
+          return reservas
+        }).filter((reserva) => reserva.fecha === today).length
+
+        setStats({
+          activeUsers,
+          coaches,
+          activeClasses: allClasses.length,
+          todaysReservations
+        })
+      } catch (error) {
+        console.error('Error cargando estadísticas admin:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadStats()
+  }, [])
 
   return (
     <div className="dashboard-container admin-dashboard">
@@ -24,7 +71,9 @@ const AdminDashboard = () => {
             <Col md={3} className="mb-4">
               <Card className="stat-card">
                 <Card.Body className="text-center">
-                  <div className="stat-number">128</div>
+                  <div className="stat-number">
+                    {loading ? <Spinner animation="border" size="sm" /> : stats.activeUsers}
+                  </div>
                   <Card.Text>Usuarios Activos</Card.Text>
                 </Card.Body>
               </Card>
@@ -33,7 +82,9 @@ const AdminDashboard = () => {
             <Col md={3} className="mb-4">
               <Card className="stat-card">
                 <Card.Body className="text-center">
-                  <div className="stat-number">45</div>
+                  <div className="stat-number">
+                    {loading ? <Spinner animation="border" size="sm" /> : stats.coaches}
+                  </div>
                   <Card.Text>Coaches</Card.Text>
                 </Card.Body>
               </Card>
@@ -42,7 +93,9 @@ const AdminDashboard = () => {
             <Col md={3} className="mb-4">
               <Card className="stat-card">
                 <Card.Body className="text-center">
-                  <div className="stat-number">32</div>
+                  <div className="stat-number">
+                    {loading ? <Spinner animation="border" size="sm" /> : stats.activeClasses}
+                  </div>
                   <Card.Text>Clases Activas</Card.Text>
                 </Card.Body>
               </Card>
@@ -51,7 +104,9 @@ const AdminDashboard = () => {
             <Col md={3} className="mb-4">
               <Card className="stat-card">
                 <Card.Body className="text-center">
-                  <div className="stat-number">156</div>
+                  <div className="stat-number">
+                    {loading ? <Spinner animation="border" size="sm" /> : stats.todaysReservations}
+                  </div>
                   <Card.Text>Reservas Hoy</Card.Text>
                 </Card.Body>
               </Card>

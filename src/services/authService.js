@@ -4,27 +4,22 @@ export const authService = {
   login: async (email, password) => {
     try {
       const response = await apiClient.post('/auth/login', { email, password })
-      
-      if (response.data && response.data.data && response.data.data.token) {
-        const token = response.data.data.token
-        const user = response.data.data.user
-        
-        localStorage.setItem('token', token)
-        localStorage.setItem('user', JSON.stringify(user))
-        
-        return {
-          token,
-          user
-        }
-      } else if (response.data && response.data.token) {
-        localStorage.setItem('token', response.data.token)
-        localStorage.setItem('user', JSON.stringify(response.data.user))
-        return response.data
+
+      const token = response.data?.data?.token || response.data?.token
+      if (!token) {
+        throw new Error('Token no recibido del servidor')
       }
-      
-      throw new Error('Respuesta inválida del servidor')
+
+      localStorage.setItem('token', token)
+
+      const profile = await authService.getProfile()
+      localStorage.setItem('user', JSON.stringify(profile))
+
+      return {
+        token,
+        user: profile
+      }
     } catch (error) {
-      // Limpiar tokens si hay error
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       throw error
@@ -39,6 +34,18 @@ export const authService = {
   logout: () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
+  },
+
+  getProfile: async () => {
+    const response = await apiClient.get('/auth/me')
+    const data = response.data
+    if (data?.data) {
+      return data.data
+    }
+    if (data?.user) {
+      return data.user
+    }
+    return data
   },
 
   getCurrentUser: () => {

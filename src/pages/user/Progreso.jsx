@@ -1,39 +1,61 @@
+import { useEffect, useState } from 'react'
 import { Container, Row, Col, Card, ProgressBar, Badge } from 'react-bootstrap'
 import Header from '../../components/Header'
 import Navbar from '../../components/Navbar'
 import '../Dashboard.css'
+import { useAuth } from '../../contexts/AuthContext'
+import userService from '../../services/userService'
 
 const Progreso = () => {
-  const progreso = [
-    {
-      actividad: 'Yoga',
-      clases: 12,
-      objetivo: 20,
-      porcentaje: 60,
-      color: 'success'
-    },
-    {
-      actividad: 'CrossFit',
-      clases: 8,
-      objetivo: 15,
-      porcentaje: 53,
-      color: 'warning'
-    },
-    {
-      actividad: 'Pilates',
-      clases: 5,
-      objetivo: 10,
-      porcentaje: 50,
-      color: 'info'
-    },
-    {
-      actividad: 'Cardio',
-      clases: 18,
-      objetivo: 20,
-      porcentaje: 90,
-      color: 'danger'
+  const { user: authUser } = useAuth()
+  const [user, setUser] = useState(null)
+  const [reservas, setReservas] = useState([])
+
+  useEffect(() => {
+    async function load() {
+      try {
+        if (!authUser?.id) return
+        const res = await userService.getById(authUser.id)
+        const freshUser = res.data || res
+        setUser(freshUser)
+        const reservasMeta = (freshUser.metadata && freshUser.metadata.reservas) || []
+        setReservas(reservasMeta)
+      } catch (error) {
+        console.error('Error cargando progreso:', error)
+      }
     }
-  ]
+
+    load()
+  }, [authUser])
+
+  // calcular métricas a partir de reservas activas (no canceladas)
+  const reservasActivas = reservas.filter((r) => r.estado !== 'cancelada')
+  const totalClases = reservasActivas.length
+  const completadas = reservasActivas.filter((r) => r.estado === 'confirmada').length
+  const cumplimiento = totalClases === 0 ? 0 : Math.round((completadas / totalClases) * 100)
+  const horas = reservasActivas
+    .filter((r) => r.estado === 'confirmada')
+    .reduce((acc, r) => {
+      const num = Number(String(r.duracion).replace(/[^0-9]/g, '')) || 0
+      return acc + num / 60
+    }, 0)
+
+  // agrupar por actividad para vista detallada
+  const agrupado = reservasActivas.reduce((acc, r) => {
+    const key = r.clase || 'Otras'
+    if (!acc[key]) acc[key] = { actividad: key, clases: 0, completadas: 0 }
+    acc[key].clases += 1
+    if (r.estado === 'confirmada') acc[key].completadas += 1
+    return acc
+  }, {})
+
+  const progreso = Object.values(agrupado).map((g) => ({
+    actividad: g.actividad,
+    clases: g.clases,
+    objetivo: Math.max(10, g.clases),
+    porcentaje: Math.round((g.completadas / g.clases) * 100) || 0,
+    color: 'success'
+  }))
 
   return (
     <div className="dashboard-container user-dashboard">
@@ -50,7 +72,7 @@ const Progreso = () => {
             <Col md={3} className="mb-3">
               <Card className="stat-card">
                 <Card.Body className="text-center">
-                  <div className="stat-number">45</div>
+                  <div className="stat-number">{totalClases}</div>
                   <Card.Text>Clases Totales</Card.Text>
                 </Card.Body>
               </Card>
@@ -58,7 +80,7 @@ const Progreso = () => {
             <Col md={3} className="mb-3">
               <Card className="stat-card">
                 <Card.Body className="text-center">
-                  <div className="stat-number">38</div>
+                  <div className="stat-number">{completadas}</div>
                   <Card.Text>Completadas</Card.Text>
                 </Card.Body>
               </Card>
@@ -66,7 +88,7 @@ const Progreso = () => {
             <Col md={3} className="mb-3">
               <Card className="stat-card">
                 <Card.Body className="text-center">
-                  <div className="stat-number">84%</div>
+                  <div className="stat-number">{cumplimiento}%</div>
                   <Card.Text>Cumplimiento</Card.Text>
                 </Card.Body>
               </Card>
@@ -74,8 +96,8 @@ const Progreso = () => {
             <Col md={3} className="mb-3">
               <Card className="stat-card">
                 <Card.Body className="text-center">
-                  <div className="stat-number">🏆</div>
-                  <Card.Text>Nivel: Oro</Card.Text>
+                  <div className="stat-number">{Math.round(horas)}</div>
+                  <Card.Text>Horas de Entrenamiento</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -91,13 +113,9 @@ const Progreso = () => {
                       <Card.Title className="mb-0">{item.actividad}</Card.Title>
                       <Badge bg={item.color}>{item.porcentaje}%</Badge>
                     </div>
-                    <ProgressBar 
-                      now={item.porcentaje} 
-                      variant={item.color}
-                      label={`${item.clases}/${item.objetivo} clases`}
-                    />
+                    <ProgressBar now={item.porcentaje} variant={item.color} label={`${item.clases}/${item.objetivo} clases`} />
                     <small className="text-muted mt-2">
-                      {item.clases} de {item.objetivo} clases completadas
+                      {item.clases} de {item.objetivo} clases registradas
                     </small>
                   </Card.Body>
                 </Card>

@@ -74,20 +74,6 @@ const CoachDashboard = () => {
               </Card>
             </Col>
 
-            <Col md={6} className="mb-4">
-              <Card className="dashboard-card">
-                <Card.Body>
-                  <div className="card-icon">💬</div>
-                  <Card.Title>Mensajes</Card.Title>
-                  <Card.Text>
-                    Comunícate con tus alumnos.
-                  </Card.Text>
-                  <Button className="btn-coach">
-                    Ver Mensajes
-                  </Button>
-                </Card.Body>
-              </Card>
-            </Col>
           </Row>
         </Container>
       </div>

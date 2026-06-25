@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import Swal from 'sweetalert2'
 import './Home.css'
 import logoSportClub from '../../assets/logoSportClub.png'
+import richardImage from '../../assets/richard.png'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -49,7 +50,7 @@ const Home = () => {
               {isAuthenticated ? (
                 <>
                   <span className="navbar-welcome">
-                    👤 Bienvenido, {user?.full_name || user?.firstName || 'Usuario'}
+                    👤 Bienvenid@, {user?.full_name || user?.firstName || 'Usuario'}
                   </span>
                   <Button
                     variant="outline-light"
@@ -86,14 +87,14 @@ const Home = () => {
         </Container>
       </nav>
 
-      <div className="home-hero">
+      <div className="home-hero" style={{ backgroundImage: `url(${richardImage})` }}>
         <Container>
           <Row className="align-items-center min-vh-75">
             <Col lg={6} className="hero-text">
               <h2>
                 {isAuthenticated 
-                  ? `¡Bienvenido, ${user?.full_name?.split(' ')[0] || user?.firstName || 'Usuario'}!` 
-                  : 'Bienvenido a SportClub'
+                  ? `¡Bienvenid@, ${user?.full_name?.split(' ')[0] || user?.firstName || 'Usuario'}!` 
+                  : 'Bienvenid@ a SportClub'
                 }
               </h2>
               <p>
@@ -141,7 +142,7 @@ const Home = () => {
               </div>
             </Col>
             <Col lg={6} className="hero-image">
-              <div className="hero-icon">⚽</div>
+              <div className="hero-icon">🏋️‍♀️</div>
             </Col>
           </Row>
         </Container>

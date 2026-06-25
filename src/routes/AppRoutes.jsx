@@ -19,6 +19,7 @@ import Clases from '../pages/coach/Clases'
 import Reportes from '../pages/coach/Reportes'
 // Importar páginas de admin
 import Usuarios from '../pages/admin/Usuarios'
+import CrearUsuario from '../pages/admin/CrearUsuario'
 import ReportesAdmin from '../pages/admin/Reportes'
 import Configuracion from '../pages/admin/Configuracion'
 
@@ -134,6 +135,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={['admin']}>
             <Usuarios />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/admin/usuarios/crear"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <CrearUsuario />
           </ProtectedRoute>
         }
       />

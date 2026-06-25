@@ -1,36 +1,85 @@
+import { useEffect, useState } from 'react'
 import { Container, Row, Col, Card, Table, Badge } from 'react-bootstrap'
 import Header from '../../components/Header'
 import Navbar from '../../components/Navbar'
 import '../Dashboard.css'
+import userService from '../../services/userService'
+import { useAuth } from '../../contexts/AuthContext'
 
 const Reportes = () => {
+  const { user: authUser } = useAuth()
+  const [coach, setCoach] = useState(null)
+  const [students, setStudents] = useState([])
+  const [classes, setClasses] = useState([])
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        if (!authUser?.id) return
+
+        const [coachRes, studentsRes] = await Promise.all([
+          userService.getById(authUser.id),
+          userService.getAll({ role: 'user' })
+        ])
+
+        const freshCoach = coachRes.data || coachRes
+        const allStudents = (studentsRes.data || studentsRes) || []
+        const savedClasses = Array.isArray(freshCoach.metadata?.clases) ? freshCoach.metadata.clases : []
+
+        setCoach(freshCoach)
+        setStudents(allStudents)
+        setClasses(savedClasses)
+      } catch (error) {
+        console.error('Error cargando reportes:', error)
+      }
+    }
+
+    load()
+  }, [authUser])
+
+  const assignedIds = Array.isArray(coach.metadata?.students)
+    ? coach.metadata.students.map((item) => (typeof item === 'object' ? item.id : item))
+    : []
+
+  const assignedStudents = students.filter((student) => assignedIds.includes(student.id))
+  const totalClasses = classes.length
+  const totalStudents = assignedStudents.length
+  const totalCapacity = classes.reduce((sum, clase) => sum + Number(clase.capacidad || 0), 0)
+  const classesWithStudents = classes.filter((clase) => (Array.isArray(clase.studentIds) ? clase.studentIds.length > 0 : assignedStudents.length > 0)).length
+
+  const today = new Date().toLocaleDateString('es-ES')
+
   const reportes = [
     {
       id: 1,
-      titulo: 'Asistencia Mes Enero',
-      fecha: '2024-01-25',
-      tipo: 'Asistencia',
+      titulo: 'Clases Creadas',
+      fecha: today,
+      tipo: 'Clases',
+      valor: `${totalClasses}`,
       estado: 'Completado'
     },
     {
       id: 2,
-      titulo: 'Desempeño de Alumnos',
-      fecha: '2024-01-20',
-      tipo: 'Desempeño',
+      titulo: 'Alumnos Asignados',
+      fecha: today,
+      tipo: 'Alumnos',
+      valor: `${totalStudents}`,
       estado: 'Completado'
     },
     {
       id: 3,
-      titulo: 'Horas de Clases Impartidas',
-      fecha: '2024-01-15',
-      tipo: 'Horas',
+      titulo: 'Capacidad Total',
+      fecha: today,
+      tipo: 'Capacidad',
+      valor: `${totalCapacity}`,
       estado: 'Completado'
     },
     {
       id: 4,
-      titulo: 'Retención de Alumnos',
-      fecha: '2024-01-10',
-      tipo: 'General',
+      titulo: 'Clases con alumnos inscritos',
+      fecha: today,
+      tipo: 'Inscripciones',
+      valor: `${classesWithStudents}`,
       estado: 'Completado'
     }
   ]
@@ -50,24 +99,24 @@ const Reportes = () => {
             <Col md={4} className="mb-3">
               <Card className="stat-card">
                 <Card.Body className="text-center">
-                  <div className="stat-number">12</div>
-                  <Card.Text>Reportes Totales</Card.Text>
+                  <div className="stat-number">{reportes.length}</div>
+                  <Card.Text>Reportes Generados</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
             <Col md={4} className="mb-3">
               <Card className="stat-card">
                 <Card.Body className="text-center">
-                  <div className="stat-number">87%</div>
-                  <Card.Text>Asistencia Promedio</Card.Text>
+                  <div className="stat-number">{totalStudents}</div>
+                  <Card.Text>Alumnos Asignados</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
             <Col md={4} className="mb-3">
               <Card className="stat-card">
                 <Card.Body className="text-center">
-                  <div className="stat-number">24</div>
-                  <Card.Text>Alumnos Activos</Card.Text>
+                  <div className="stat-number">{classesWithStudents}</div>
+                  <Card.Text>Clases con Asignaciones</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -86,6 +135,7 @@ const Reportes = () => {
                     <th>Título</th>
                     <th>Tipo</th>
                     <th>Fecha</th>
+                    <th>Valor</th>
                     <th>Estado</th>
                   </tr>
                 </thead>
@@ -95,6 +145,7 @@ const Reportes = () => {
                       <td>{reporte.titulo}</td>
                       <td>{reporte.tipo}</td>
                       <td>{reporte.fecha}</td>
+                      <td>{reporte.valor}</td>
                       <td>
                         <Badge bg="success">{reporte.estado}</Badge>
                       </td>
